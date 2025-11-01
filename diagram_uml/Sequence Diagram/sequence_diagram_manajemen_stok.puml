@@ -1,0 +1,151 @@
+@startuml sequence_diagram_manajemen_stok
+!theme plain
+title Sequence Diagram - Manajemen Stok Produk
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam sequenceMessageAlign center
+skinparam sequenceReferenceAlign center
+skinparam sequenceActorBorderColor #6C757D
+skinparam sequenceActorBackgroundColor #E8F5E8
+skinparam sequenceActorFontColor #212529
+skinparam sequenceActorFontSize 12
+skinparam sequenceActorFontStyle bold
+skinparam sequenceParticipantBorderColor #6C757D
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceParticipantFontColor #212529
+skinparam sequenceParticipantFontSize 11
+skinparam sequenceParticipantFontStyle bold
+skinparam sequenceArrowColor #495057
+skinparam sequenceArrowFontColor #212529
+skinparam sequenceArrowFontSize 10
+skinparam sequenceGroupBorderColor #ADB5BD
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👨‍💼 Manajer" as Manajer
+participant "💻 Sistem POS" as System
+participant "🗄️ Database" as DB
+
+' Sequence Flow
+Manajer -> System: 1. Akses Dashboard Stok
+activate System
+System -> DB: 2. Query Data Stok & Produk
+activate DB
+DB -> System: 3. Return Data Dashboard
+deactivate DB
+System -> System: 4. Highlight Produk Low Stock
+System -> Manajer: 5. Tampilkan Dashboard Stok
+deactivate System
+
+alt Kelola Produk
+    Manajer -> System: 6. Pilih Menu Kelola Produk
+    activate System
+    
+    alt Tambah Produk Baru
+        Manajer -> System: 7. Input Data Produk Baru
+        note right: Nama, SKU, Harga, Kategori, Stok Awal, Min Stok
+        System -> System: 8. Validasi Data Input
+        
+        alt Data Valid
+            System -> DB: 9. Simpan Produk Baru
+            activate DB
+            DB -> System: 10. Product ID
+            deactivate DB
+            System -> DB: 11. Catat Riwayat Stok Awal
+            activate DB
+            DB -> System: 12. Konfirmasi Riwayat
+            deactivate DB
+            System -> Manajer: 13. Konfirmasi Produk Tersimpan
+            
+        else Data Invalid
+            System -> Manajer: 14. Error: Data Tidak Valid
+        end
+        
+    else Edit Produk Existing
+        Manajer -> System: 15. Pilih Produk untuk Edit
+        System -> DB: 16. Query Detail Produk
+        activate DB
+        DB -> System: 17. Return Detail Produk
+        deactivate DB
+        System -> Manajer: 18. Tampilkan Form Edit
+        
+        Manajer -> System: 19. Update Data Produk
+        System -> System: 20. Validasi Perubahan
+        System -> DB: 21. Update Data Produk
+        activate DB
+        DB -> System: 22. Konfirmasi Update
+        deactivate DB
+        System -> Manajer: 23. Konfirmasi Perubahan Tersimpan
+    end
+    deactivate System
+
+else Update Stok
+    Manajer -> System: 24. Pilih Menu Update Stok
+    activate System
+    Manajer -> System: 25. Pilih Produk
+    System -> DB: 26. Query Detail Produk & Riwayat Stok
+    activate DB
+    DB -> System: 27. Return Data Produk & Riwayat
+    deactivate DB
+    System -> Manajer: 28. Tampilkan Detail & Riwayat Stok
+    
+    Manajer -> System: 29. Input Perubahan Stok
+    note right: Jenis: Tambah/Kurangi/Set Manual\nJumlah & Alasan
+    System -> System: 30. Validasi Perubahan Stok
+    
+    alt Perubahan Valid
+        System -> System: 31. Hitung Stok Baru
+        System -> DB: 32. Update Stok Produk
+        activate DB
+        DB -> System: 33. Konfirmasi Update Stok
+        deactivate DB
+        System -> DB: 34. Catat Riwayat Perubahan
+        activate DB
+        DB -> System: 35. Konfirmasi Riwayat
+        deactivate DB
+        System -> Manajer: 36. Konfirmasi Stok Terupdate
+        
+    else Perubahan Invalid
+        System -> Manajer: 37. Error: Perubahan Tidak Valid
+    end
+    deactivate System
+
+else Monitor Stok
+    Manajer -> System: 38. Pilih Menu Monitor Stok
+    activate System
+    System -> DB: 39. Query Produk Low Stock
+    activate DB
+    DB -> System: 40. Return Daftar Low Stock
+    deactivate DB
+    System -> Manajer: 41. Tampilkan Daftar Low Stock
+    
+    Manajer -> System: 42. Generate Laporan Stok
+    System -> DB: 43. Query Data untuk Laporan
+    activate DB
+    DB -> System: 44. Return Data Laporan
+    deactivate DB
+    System -> System: 45. Generate Laporan (PDF/Excel)
+    System -> Manajer: 46. Tampilkan/Download Laporan
+    deactivate System
+end
+
+System -> DB: 47. Update Dashboard & Notifikasi
+activate System
+activate DB
+DB -> System: 48. Konfirmasi Update
+deactivate DB
+System -> Manajer: 49. Refresh Dashboard
+deactivate System
+
+note over Manajer, DB
+    **Manajemen Stok Berhasil:**
+    - Data produk/stok terupdate
+    - Riwayat perubahan tercatat
+    - Dashboard & notifikasi terupdate
+    - Laporan tersedia untuk analisa
+end note
+
+@enduml

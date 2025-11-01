@@ -1,0 +1,49 @@
+@startuml activity_diagram_generate_laporan
+!theme plain
+title Activity Diagram - Generate Laporan (Simplified)
+
+' Styling untuk konsistensi dengan diagram lain
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam activityFontColor #212529
+skinparam activityFontSize 12
+skinparam activityFontStyle bold
+skinparam noteBackgroundColor #FFF3E0
+skinparam noteBorderColor #F57C00
+skinparam partitionBackgroundColor #E9ECEF
+skinparam partitionBorderColor #ADB5BD
+skinparam swimlaneBackgroundColor #F8F9FA
+skinparam swimlaneBorderColor #6C757D
+
+|#E3F2FD|User (Direktur/Manajer)|
+start
+:Pilih Jenis Laporan;
+:Set Parameter & Filter;
+:Preview Laporan;
+:Download/Print Laporan;
+stop
+
+|#F3E5F5|Sistem POS|
+:Cek Permission User;
+:Proses Query Data;
+:Generate Laporan;
+:Format Output;
+
+|#FFECB3|Database|
+:Query Data Sesuai Filter;
+:Log Aktivitas Generate;
+
+note right of User
+  **Jenis Laporan:**
+  - Laporan Penjualan
+  - Laporan Stok
+  - Laporan Return
+  - Laporan Keuangan
+
+  **Permission:**
+  - Direktur: Semua cabang
+  - Manajer: Cabang sendiri
+end note
+
+@enduml

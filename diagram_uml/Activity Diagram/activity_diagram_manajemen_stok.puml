@@ -1,0 +1,49 @@
+@startuml activity_diagram_manajemen_stok
+!theme plain
+title Activity Diagram - Manajemen Stok Produk (Simplified)
+
+' Styling untuk konsistensi dengan diagram lain
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam activityFontColor #212529
+skinparam activityFontSize 12
+skinparam activityFontStyle bold
+skinparam noteBackgroundColor #E8F5E8
+skinparam noteBorderColor #2E7D32
+skinparam partitionBackgroundColor #E9ECEF
+skinparam partitionBorderColor #ADB5BD
+skinparam swimlaneBackgroundColor #F8F9FA
+skinparam swimlaneBorderColor #6C757D
+
+|#E8F5E8|Manajer|
+start
+:Akses Dashboard Stok;
+if (Pilih Aktivitas?) then (Kelola Produk)
+  :Input/Edit Data Produk;
+elseif (Pilih Aktivitas?) then (Update Stok)
+  :Adjust Stok Produk;
+else (Monitor Stok)
+  :Review Low Stock;
+  :Generate Laporan;
+endif
+:Selesai;
+stop
+
+|#F3E5F5|Sistem POS|
+:Tampilkan Dashboard;
+:Validasi & Proses Data;
+:Update Notifikasi;
+
+|#FFECB3|Database|
+:Simpan Perubahan;
+:Update Riwayat Stok;
+
+note right of Manajer
+  **Aktivitas Utama:**
+  1. Kelola produk baru/existing
+  2. Update stok (tambah/kurangi)
+  3. Monitor & laporan stok
+end note
+
+@enduml

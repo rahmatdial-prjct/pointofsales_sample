@@ -1,0 +1,127 @@
+@startuml sequence_diagram_generate_laporan
+!theme plain
+title Sequence Diagram - Generate Laporan
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam sequenceMessageAlign center
+skinparam sequenceReferenceAlign center
+skinparam sequenceActorBorderColor #6C757D
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceActorFontColor #212529
+skinparam sequenceActorFontSize 12
+skinparam sequenceActorFontStyle bold
+skinparam sequenceParticipantBorderColor #6C757D
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceParticipantFontColor #212529
+skinparam sequenceParticipantFontSize 11
+skinparam sequenceParticipantFontStyle bold
+skinparam sequenceArrowColor #495057
+skinparam sequenceArrowFontColor #212529
+skinparam sequenceArrowFontSize 10
+skinparam sequenceGroupBorderColor #ADB5BD
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 User (Direktur/Manajer)" as User
+participant "💻 Sistem POS" as System
+participant "🗄️ Database" as DB
+
+' Sequence Flow
+User -> System: 1. Akses Menu Laporan
+activate System
+System -> System: 2. Cek Role & Permission User
+
+alt Role = Direktur
+    System -> System: 3. Set Filter = Semua Cabang
+    System -> User: 4. Tampilkan Semua Jenis Laporan
+    
+else Role = Manajer
+    System -> System: 5. Set Filter = Cabang User
+    System -> User: 6. Tampilkan Laporan Cabang
+    
+else Role = Pegawai
+    System -> User: 7. Tampilkan Laporan Terbatas (View Only)
+end
+
+User -> System: 8. Pilih Jenis Laporan
+note right: Penjualan, Stok, Return, Keuangan
+
+User -> System: 9. Set Parameter & Filter
+note right: Periode, Kategori, Status, Format Output
+
+System -> System: 10. Validasi Parameter Input
+
+alt Parameter Valid
+    System -> DB: 11. Query Data Sesuai Filter & Permission
+    activate DB
+    
+    alt Laporan Penjualan
+        DB -> DB: 12. Query Transaksi & Detail
+        DB -> System: 13. Return Data Penjualan
+        
+    else Laporan Stok
+        DB -> DB: 14. Query Produk & Stok Current
+        DB -> System: 15. Return Data Stok
+        
+    else Laporan Return
+        DB -> DB: 16. Query Return & Status
+        DB -> System: 17. Return Data Return
+        
+    else Laporan Keuangan
+        DB -> DB: 18. Query Transaksi & Return untuk Analisa
+        DB -> System: 19. Return Data Keuangan
+    end
+    
+    deactivate DB
+    
+    System -> System: 20. Proses & Kalkulasi Data
+    System -> System: 21. Generate Chart/Grafik
+    System -> System: 22. Format Data Sesuai Template
+    System -> User: 23. Preview Laporan
+    
+    User -> System: 24. Konfirmasi Generate Final
+    System -> System: 25. Generate File Final (PDF/Excel)
+    System -> System: 26. Simpan ke Temporary Storage
+    
+    alt Download
+        User -> System: 27. Request Download
+        System -> User: 28. Download File Laporan
+        
+    else Email
+        User -> System: 29. Input Email Tujuan
+        System -> System: 30. Validasi Email Format
+        System -> System: 31. Send Email dengan Attachment
+        System -> User: 32. Konfirmasi Email Terkirim
+        
+    else Print
+        User -> System: 33. Request Print
+        System -> System: 34. Format untuk Print
+        System -> User: 35. Print Laporan
+    end
+    
+    System -> DB: 36. Log Aktivitas Generate Laporan
+    activate DB
+    DB -> System: 37. Konfirmasi Log
+    deactivate DB
+    
+    System -> System: 38. Cleanup Temporary Files
+    System -> User: 39. Laporan Berhasil Diproses
+    
+else Parameter Invalid
+    System -> User: 40. Error: Parameter Tidak Valid
+end
+
+deactivate System
+
+note over User, DB
+    **Generate Laporan Berhasil:**
+    - File laporan tersedia dalam format yang dipilih
+    - Data sesuai dengan filter dan permission
+    - Aktivitas tercatat untuk audit
+    - Temporary files dibersihkan
+end note
+
+@enduml

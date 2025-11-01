@@ -1,0 +1,235 @@
+@startuml class_diagram_pos_system_new
+!theme plain
+title Class Diagram - Sistem POS UMKM (Standard UML Format)
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam classBackgroundColor #E3F2FD
+skinparam classBorderColor #1976D2
+skinparam classFontColor #212529
+skinparam classFontSize 11
+skinparam classFontStyle bold
+skinparam classAttributeFontColor #424242
+skinparam classAttributeFontSize 10
+skinparam packageBackgroundColor #F8F9FA
+skinparam packageBorderColor #6C757D
+skinparam packageFontColor #212529
+skinparam packageFontSize 12
+skinparam packageFontStyle bold
+skinparam arrowColor #495057
+skinparam arrowFontColor #212529
+skinparam arrowFontSize 9
+
+' Layout direction
+top to bottom direction
+
+' ===== CORE ENTITIES =====
+package "Core System" {
+    class User {
+        -id: int
+        -name: String
+        -email: String
+        -password: String
+        -role: String
+        -is_active: boolean
+        -branch_id: int
+        -email_verified_at: DateTime
+        -remember_token: String
+        -created_at: DateTime
+        -updated_at: DateTime
+        --
+        +isDirector(): boolean
+        +isManager(): boolean
+        +isEmployee(): boolean
+        +isActive(): boolean
+        +canManageUsers(): boolean
+        +canManageProducts(): boolean
+        +canProcessTransactions(): boolean
+        +scopeActive(query): Query
+        +scopeByRole(query, role): Query
+    }
+
+    class Branch {
+        -id: int
+        -name: String
+        -address: String
+        -operational_area: String
+        -phone: String
+        -email: String
+        -is_active: boolean
+        -created_at: DateTime
+        -updated_at: DateTime
+        -deleted_at: DateTime
+        --
+        +users(): HasMany
+        +products(): HasMany
+        +transactions(): HasMany
+        +scopeActive(query): Query
+    }
+}
+
+' ===== PRODUCT MANAGEMENT =====
+package "Product Management" {
+    class Category {
+        -id: int
+        -name: String
+        -slug: String
+        -description: String
+        -is_active: boolean
+        -created_at: DateTime
+        -updated_at: DateTime
+        -deleted_at: DateTime
+        --
+        +products(): HasMany
+        +scopeActive(query): Query
+    }
+
+    class Product {
+        -id: int
+        -name: String
+        -sku: String
+        -category_id: int
+        -description: String
+        -image: String
+        -base_price: decimal
+        -stock: int
+        -is_active: boolean
+        -branch_id: int
+        -created_at: DateTime
+        -updated_at: DateTime
+        -deleted_at: DateTime
+        --
+        +category(): BelongsTo
+        +branch(): BelongsTo
+        +transactionItems(): HasMany
+        +returnItems(): HasMany
+        +scopeActive(query): Query
+        +scopeLowStock(query): Query
+    }
+}
+
+' ===== TRANSACTION MANAGEMENT =====
+package "Transaction Management" {
+    class Transaction {
+        -id: int
+        -invoice_number: String
+        -branch_id: int
+        -user_id: int
+        -employee_id: int
+        -customer_name: String
+        -subtotal: decimal
+        -discount_amount: decimal
+        -total_amount: decimal
+        -payment_method: String
+        -status: String
+        -notes: String
+        -created_at: DateTime
+        -updated_at: DateTime
+        -deleted_at: DateTime
+        --
+        +items(): HasMany
+        +branch(): BelongsTo
+        +employee(): BelongsTo
+        +user(): BelongsTo
+        +calculateTotal(): decimal
+        +scopeCompleted(query): Query
+    }
+
+    class TransactionItem {
+        -id: int
+        -transaction_id: int
+        -product_id: int
+        -quantity: int
+        -price: decimal
+        -discount_percentage: decimal
+        -discount_amount: decimal
+        -subtotal: decimal
+        -created_at: DateTime
+        -updated_at: DateTime
+        --
+        +transaction(): BelongsTo
+        +product(): BelongsTo
+        +calculateSubtotal(): decimal
+    }
+}
+
+' ===== RETURN MANAGEMENT =====
+package "Return Management" {
+    class ReturnTransaction {
+        -id: int
+        -return_number: String
+        -original_transaction_id: int
+        -branch_id: int
+        -user_id: int
+        -employee_id: int
+        -manager_id: int
+        -total_amount: decimal
+        -reason: String
+        -status: String
+        -notes: String
+        -approved_at: DateTime
+        -created_at: DateTime
+        -updated_at: DateTime
+        --
+        +items(): HasMany
+        +originalTransaction(): BelongsTo
+        +branch(): BelongsTo
+        +employee(): BelongsTo
+        +manager(): BelongsTo
+        +approve(): boolean
+        +reject(): boolean
+    }
+
+    class ReturnItem {
+        -id: int
+        -return_transaction_id: int
+        -product_id: int
+        -quantity: int
+        -price: decimal
+        -subtotal: decimal
+        -reason: String
+        -condition: String
+        -created_at: DateTime
+        -updated_at: DateTime
+        --
+        +returnTransaction(): BelongsTo
+        +product(): BelongsTo
+        +calculateSubtotal(): decimal
+    }
+}
+
+' ===== RELATIONSHIPS =====
+
+' Core System Relationships
+User }o--|| Branch : belongs to
+Branch ||--o{ User : has many
+
+' Product Management Relationships
+Category ||--o{ Product : has many
+Product }o--|| Category : belongs to
+Branch ||--o{ Product : has many
+Product }o--|| Branch : belongs to
+
+' Transaction Relationships
+User ||--o{ Transaction : processes
+Transaction }o--|| User : processed by
+Branch ||--o{ Transaction : has many
+Transaction }o--|| Branch : belongs to
+Transaction ||--o{ TransactionItem : contains
+TransactionItem }o--|| Transaction : belongs to
+Product ||--o{ TransactionItem : sold in
+TransactionItem }o--|| Product : references
+
+' Return Relationships
+User ||--o{ ReturnTransaction : processes
+ReturnTransaction }o--|| User : processed by
+Branch ||--o{ ReturnTransaction : has many
+ReturnTransaction }o--|| Branch : belongs to
+Transaction ||--o{ ReturnTransaction : can be returned
+ReturnTransaction }o--|| Transaction : returns
+ReturnTransaction ||--o{ ReturnItem : contains
+ReturnItem }o--|| ReturnTransaction : belongs to
+Product ||--o{ ReturnItem : returned in
+ReturnItem }o--|| Product : references
+
+@enduml

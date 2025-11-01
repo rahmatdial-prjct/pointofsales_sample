@@ -1,0 +1,63 @@
+@startuml activity_diagram_proses_retur_business
+!theme plain
+title Activity Diagram - Proses Retur Produk (Business Layer)
+
+|#E3F2FD|👤 Pegawai|
+start
+:Terima keluhan pelanggan;
+:Periksa kondisi produk\n(rusak/cacat/salah ukuran);
+:Cek struk pembelian;
+
+if (Produk layak retur?) then (ya)
+    :Input data retur\nke sistem;
+    :Foto kondisi produk;
+    
+    |#F3E5F5|💻 Sistem POS|
+    :Buat permintaan retur;
+    :Kirim notifikasi\nke manajer;
+    
+    |#FFECB3|👤 Manajer|
+    :Terima notifikasi retur;
+    :Review kondisi produk;
+    :Periksa alasan retur;
+    
+    if (Setujui retur?) then (ya)
+        :Setujui permintaan retur;
+        
+        |#F3E5F5|💻 Sistem POS|
+        :Update status retur\n"Disetujui";
+        
+        |#E3F2FD|👤 Pegawai|
+        :Proses pengembalian uang\natau tukar produk;
+        :Cetak bukti retur;
+        
+        |#FFECB3|🗄️ Database|
+        :Simpan data retur;
+        :Tambah stok produk\n(jika masih layak jual);
+        
+    else (tidak)
+        |#FFECB3|👤 Manajer|
+        :Tolak permintaan retur;
+        
+        |#F3E5F5|💻 Sistem POS|
+        :Update status retur\n"Ditolak";
+        
+        |#E3F2FD|👤 Pegawai|
+        :Jelaskan alasan penolakan\nkepada pelanggan;
+    endif
+    
+else (tidak)
+    :Jelaskan kebijakan retur\nkepada pelanggan;
+endif
+
+stop
+
+note right of Pegawai
+  **Kriteria Retur:**
+  1. Produk rusak/cacat
+  2. Salah ukuran
+  3. Ada struk pembelian
+  4. Dalam batas waktu retur
+end note
+
+@enduml

@@ -1,0 +1,16 @@
+Req ID;Aspek Non-Fungsional;Deskripsi;Priority (1-5)
+Req 001;Security Framework;Sistem memiliki keamanan berlapis untuk melindungi data dan akses pengguna;5
+Req 002;Data Integrity;Database dirancang agar data tetap konsisten dan tidak rusak saat digunakan;5
+Req 003;Database Performance;Sistem dapat menampilkan data dengan cepat meski jumlah data banyak;5
+Req 004;System Scalability;Sistem dapat menangani banyak cabang tanpa menurunkan kinerja;4
+Req 005;Code Maintainability;Kode program terstruktur rapi sehingga mudah diperbaiki dan dikembangkan;4
+Req 006;Error Handling Quality;Sistem memberikan pesan error yang jelas dan tidak crash saat ada masalah;4
+Req 007;Transaction Reliability;Transaksi keuangan dijamin akurat dan tidak akan hilang atau rusak;4
+Req 008;UI Responsiveness;Tampilan website menyesuaikan dengan ukuran layar HP dan tablet;3
+Req 009;File Storage Security;Gambar produk tersimpan aman dengan validasi format dan ukuran file;3
+Req 010;Session Security;Login pengguna aman dan tidak mudah dibajak oleh orang lain;3
+Req 011;Cross-Browser Support;Website berfungsi dengan baik di semua browser (Chrome Firefox Safari);3
+Req 012;Memory Optimization;Sistem hemat memori saat memproses laporan dengan data yang banyak;2
+Req 013;Asset Performance;File CSS dan JavaScript dimampatkan agar website loading lebih cepat;2
+Req 014;Environment Flexibility;Sistem dapat berjalan di server development dan production dengan mudah;2
+Req 015;Code Quality;Kode program memiliki dokumentasi yang jelas dan mudah dipahami programmer lain;1

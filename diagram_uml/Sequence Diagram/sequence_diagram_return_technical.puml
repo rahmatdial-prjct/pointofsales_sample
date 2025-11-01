@@ -1,0 +1,82 @@
+@startuml sequence_diagram_return_technical
+!theme plain
+title Sequence Diagram - Return Processing (Technical Implementation Layer)
+
+' Styling sesuai referensi
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowColor #333333
+skinparam sequenceActorBorderColor #333333
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceParticipantBorderColor #333333
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 Manajer" as Manajer
+participant "🖥️ UI" as UI
+participant "🌐 Controller" as Controller
+participant "🗄️ Database" as Database
+
+' Manager handles return process
+Manajer -> UI: 1. Akses halaman retur
+activate UI
+UI -> Controller: 1.1. Ambil daftar permintaan retur
+activate Controller
+Controller -> Database: 1.2. Query data retur pending
+activate Database
+Database --> Controller: 1.3. Data retur yang menunggu
+deactivate Database
+Controller --> UI: 1.4. Data untuk review
+deactivate Controller
+UI --> Manajer: 1.5. Tampilkan daftar retur
+deactivate UI
+
+Manajer -> UI: 2. Pilih dan review retur
+activate UI
+UI -> Controller: 2.1. Ambil detail retur
+activate Controller
+Controller -> Database: 2.2. Query detail retur dan produk
+activate Database
+Database --> Controller: 2.3. Data lengkap retur
+deactivate Database
+Controller --> UI: 2.4. Detail untuk review
+deactivate Controller
+UI --> Manajer: 2.5. Tampilkan detail retur
+deactivate UI
+
+Manajer -> UI: 3. Setujui/tolak retur
+activate UI
+UI -> Controller: 3.1. Kirim keputusan
+activate Controller
+Controller -> Database: 3.2. Update status retur
+activate Database
+Database --> Controller: 3.3. Status terupdate
+deactivate Database
+
+alt Retur disetujui
+    Controller -> Database: 3.4. Kembalikan stok produk
+    activate Database
+    Database --> Controller: 3.5. Stok dikembalikan
+    deactivate Database
+    Controller --> UI: 3.6. Retur berhasil disetujui
+    deactivate Controller
+    UI --> Manajer: 3.7. Konfirmasi persetujuan
+    deactivate UI
+else Retur ditolak
+    Controller --> UI: 3.8. Retur ditolak
+    deactivate Controller
+    UI --> Manajer: 3.9. Konfirmasi penolakan
+    deactivate UI
+end
+
+note right of Manajer
+  **Implementasi Teknis:**
+  - Controller terpisah untuk role Employee dan Manager
+  - Database transactions untuk konsistensi data
+  - Authorization policies untuk kontrol akses
+  - Status tracking untuk workflow retur
+end note
+
+@enduml

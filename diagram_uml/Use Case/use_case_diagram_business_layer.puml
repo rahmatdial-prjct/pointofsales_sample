@@ -1,0 +1,96 @@
+@startuml use_case_diagram_business_layer
+!theme plain
+title Use Case Diagram - Sistem POS UMKM\nBaju Muslim Wanita (Business Analysis Layer)
+
+' Actors (Stickman representation sesuai standar UML)
+left to right direction
+
+:Direktur: as Direktur
+:Manajer: as Manajer
+:Pegawai: as Pegawai
+
+' System Boundary
+rectangle "Sistem POS UMKM" {
+    ' Authentication & Access
+    usecase "Login ke Sistem" as UC_Login
+    usecase "Keluar dari Sistem" as UC_Logout
+
+    ' Direktur Business Use Cases
+    usecase "Lihat Laporan\nSeluruh Cabang" as UC_LaporanTerintegrasi
+    usecase "Kelola Data Cabang" as UC_KelolaCabang
+    usecase "Kelola Pengguna\nSistem" as UC_KelolaUser
+    usecase "Ekspor Laporan\nke Excel/PDF" as UC_ExportData
+    usecase "Monitor Performa\nCabang" as UC_MonitorPerforma
+
+    ' Manajer Business Use Cases
+    usecase "Kelola Stok Produk\nHijab & Gamis" as UC_KelolaProduk
+    usecase "Kelola Kategori\nProduk Muslim" as UC_KelolaKategori
+    usecase "Kelola Data Pegawai" as UC_KelolaPegawai
+    usecase "Setujui/Tolak\nRetur Produk" as UC_ProsesReturn
+    usecase "Lihat Laporan\nCabang" as UC_LaporanCabang
+    usecase "Atur Harga\nProduk" as UC_AturHarga
+
+    ' Pegawai Business Use Cases
+    usecase "Jual Produk\nBaju Muslim" as UC_JualProduk
+    usecase "Cetak Struk\nPenjualan" as UC_CetakStruk
+    usecase "Proses Retur\nBarang Rusak" as UC_ProsesRetur
+    usecase "Cari Produk\ndi Katalog" as UC_CariProduk
+    usecase "Lihat Stok\nProduk" as UC_LihatStok
+}
+
+' Actor Associations - Business Focus
+' Direktur connections
+Direktur --- UC_Login
+Direktur --- UC_KelolaCabang
+Direktur --- UC_KelolaUser
+Direktur --- UC_LaporanTerintegrasi
+Direktur --- UC_ExportData
+Direktur --- UC_MonitorPerforma
+Direktur --- UC_Logout
+
+' Manajer connections
+Manajer --- UC_Login
+Manajer --- UC_KelolaProduk
+Manajer --- UC_KelolaKategori
+Manajer --- UC_KelolaPegawai
+Manajer --- UC_ProsesReturn
+Manajer --- UC_LaporanCabang
+Manajer --- UC_AturHarga
+Manajer --- UC_Logout
+
+' Pegawai connections
+Pegawai --- UC_Login
+Pegawai --- UC_JualProduk
+Pegawai --- UC_CetakStruk
+Pegawai --- UC_ProsesRetur
+Pegawai --- UC_CariProduk
+Pegawai --- UC_LihatStok
+Pegawai --- UC_Logout
+
+' Business Relationships
+UC_JualProduk ..> UC_CetakStruk : <<include>>
+UC_ProsesReturn ..> UC_LaporanCabang : <<include>>
+
+' Layout positioning untuk diagram yang rapi
+UC_Login -[hidden]- UC_Logout
+UC_KelolaCabang -[hidden]- UC_KelolaUser
+UC_KelolaProduk -[hidden]- UC_KelolaKategori
+UC_JualProduk -[hidden]- UC_CetakStruk
+
+' Styling untuk visual yang konsisten
+skinparam actor {
+    BackgroundColor #e1f5fe
+    BorderColor #01579b
+}
+
+skinparam usecase {
+    BackgroundColor #f3e5f5
+    BorderColor #4a148c
+}
+
+skinparam rectangle {
+    BackgroundColor #e8f5e8
+    BorderColor #2e7d32
+}
+
+@enduml

@@ -1,0 +1,65 @@
+@startuml sequence_diagram_login
+!theme plain
+title Sequence Diagram - Login & Authentication (Simplified)
+
+' Styling sesuai referensi
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowColor #333333
+skinparam sequenceActorBorderColor #333333
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceParticipantBorderColor #333333
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants (1 actor + 3 objects)
+actor "👤 User" as User
+participant "🖥️ UI" as UI
+participant "🌐 Controller" as Controller
+participant "🗄️ Database" as Database
+
+' Sequence Flow
+User -> UI: 1. Akses Halaman Login
+activate UI
+UI -> Controller: :order(GET /login)
+activate Controller
+Controller --> UI: :order(login form)
+deactivate Controller
+UI --> User: :order(tampilkan form login)
+deactivate UI
+
+User -> UI: 2. Input Kredensial
+activate UI
+UI -> Controller: :order(POST /login)
+activate Controller
+Controller -> Database: :order(SELECT user WHERE email)
+activate Database
+Database --> Controller: :order(user data)
+deactivate Database
+
+alt Kredensial Valid
+    Controller -> Database: :order(UPDATE last_login)
+    activate Database
+    Database --> Controller: :order(login updated)
+    deactivate Database
+    Controller --> UI: :order(redirect to dashboard)
+    deactivate Controller
+    UI --> User: :order(tampilkan dashboard)
+    deactivate UI
+else Kredensial Invalid
+    Controller --> UI: :order(login error)
+    deactivate Controller
+    UI --> User: :order(tampilkan pesan error)
+    deactivate UI
+end
+
+note right of User
+  **Implementasi Laravel:**
+  - AuthController
+  - User Model
+  - Auth Middleware
+  - Blade Templates
+end note
+
+@enduml

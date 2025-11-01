@@ -1,0 +1,74 @@
+@startuml sequence_diagram_transaction_technical
+!theme plain
+title Sequence Diagram - Transaction Processing (Technical Implementation Layer)
+
+' Styling sesuai referensi
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowColor #333333
+skinparam sequenceActorBorderColor #333333
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceParticipantBorderColor #333333
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 Pegawai" as Pegawai
+participant "🖥️ UI" as UI
+participant "🌐 Controller" as Controller
+participant "🗄️ Database" as Database
+
+' Sequence Flow
+Pegawai -> UI: 1. Input data transaksi
+activate UI
+UI -> Controller: 1.1. Kirim data penjualan
+activate Controller
+Controller -> Database: 1.2. Validasi produk dan stok
+activate Database
+Database --> Controller: 1.3. Data produk valid
+deactivate Database
+
+alt Stok mencukupi
+    Controller -> Database: 1.4. Simpan transaksi
+    activate Database
+    Database --> Controller: 1.5. Transaksi tersimpan
+    deactivate Database
+    Controller -> Database: 1.6. Update stok produk
+    activate Database
+    Database --> Controller: 1.7. Stok terupdate
+    deactivate Database
+    Controller --> UI: 1.8. Redirect ke invoice
+    deactivate Controller
+    UI --> Pegawai: 1.9. Tampilkan struk penjualan
+    deactivate UI
+else Stok tidak mencukupi
+    Controller --> UI: 1.10. Error stok habis
+    deactivate Controller
+    UI --> Pegawai: 1.11. Tampilkan pesan error
+    deactivate UI
+end
+
+' Invoice Generation
+Pegawai -> UI: 2. Cetak ulang struk
+activate UI
+UI -> Controller: 2.1. Request data invoice
+activate Controller
+Controller -> Database: 2.2. Ambil data transaksi
+activate Database
+Database --> Controller: 2.3. Data transaksi lengkap
+deactivate Database
+Controller --> UI: 2.4. Data untuk invoice
+deactivate Controller
+UI --> Pegawai: 2.5. Tampilkan/cetak struk
+deactivate UI
+
+note right of Pegawai
+  **Implementasi Teknis:**
+  - Laravel Controller untuk HTTP requests
+  - Database transactions untuk konsistensi data
+  - Eloquent Models untuk operasi database
+  - Blade views untuk rendering halaman
+end note
+
+@enduml

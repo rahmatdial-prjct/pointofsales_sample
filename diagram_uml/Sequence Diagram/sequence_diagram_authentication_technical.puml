@@ -1,0 +1,97 @@
+@startuml sequence_diagram_authentication_technical
+!theme plain
+title Sequence Diagram - User Authentication (Technical Implementation Layer)
+
+' Styling sesuai referensi
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowColor #333333
+skinparam sequenceActorBorderColor #333333
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceParticipantBorderColor #333333
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 Manajer" as Manajer
+participant "🖥️ UI" as UI
+participant "🌐 Controller" as Controller
+participant "🗄️ Database" as Database
+
+' Login Process
+Manajer -> UI: 1. Akses halaman login
+activate UI
+UI --> Manajer: 1.1. Tampilkan form login
+deactivate UI
+
+Manajer -> UI: 2. Input email dan password
+activate UI
+UI -> Controller: 2.1. Kirim data login
+activate Controller
+Controller -> Database: 2.2. Validasi user credentials
+activate Database
+Database --> Controller: 2.3. Data user atau error
+deactivate Database
+
+alt Kredensial valid
+    Controller -> Database: 2.4. Buat session login
+    activate Database
+    Database --> Controller: 2.5. Session berhasil dibuat
+    deactivate Database
+    Controller --> UI: 2.6. Redirect ke dashboard manajer
+    deactivate Controller
+    UI --> Manajer: 2.7. Tampilkan dashboard
+    deactivate UI
+else Kredensial tidak valid
+    Controller --> UI: 2.8. Error message
+    deactivate Controller
+    UI --> Manajer: 2.9. Tampilkan pesan error
+    deactivate UI
+end
+
+' Protected Route Access
+Manajer -> UI: 3. Akses halaman produk
+activate UI
+UI -> Controller: 3.1. Cek authorization
+activate Controller
+Controller -> Database: 3.2. Validasi session dan role
+activate Database
+Database --> Controller: 3.3. Status authorization
+deactivate Database
+
+alt Role authorized
+    Controller --> UI: 3.4. Akses diberikan
+    deactivate Controller
+    UI --> Manajer: 3.5. Tampilkan halaman produk
+    deactivate UI
+else Role tidak authorized
+    Controller --> UI: 3.6. Access denied
+    deactivate Controller
+    UI --> Manajer: 3.7. Tampilkan error 403
+    deactivate UI
+end
+
+' Logout Process
+Manajer -> UI: 4. Klik logout
+activate UI
+UI -> Controller: 4.1. Request logout
+activate Controller
+Controller -> Database: 4.2. Hapus session
+activate Database
+Database --> Controller: 4.3. Session dihapus
+deactivate Database
+Controller --> UI: 4.4. Redirect ke login
+deactivate Controller
+UI --> Manajer: 4.5. Tampilkan halaman login
+deactivate UI
+
+note right of Manajer
+  **Implementasi Teknis:**
+  - Laravel Auth untuk autentikasi
+  - Session database untuk penyimpanan
+  - Role-based middleware untuk otorisasi
+  - Password hashing dengan bcrypt
+end note
+
+@enduml

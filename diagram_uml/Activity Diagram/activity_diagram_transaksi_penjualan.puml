@@ -1,0 +1,44 @@
+@startuml activity_diagram_transaksi_penjualan
+!theme plain
+title Activity Diagram - Proses Transaksi Penjualan (Simplified)
+
+' Styling untuk konsistensi dengan diagram lain
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam activityFontColor #212529
+skinparam activityFontSize 12
+skinparam activityFontStyle bold
+skinparam noteBackgroundColor #E8F5E8
+skinparam noteBorderColor #2E7D32
+skinparam partitionBackgroundColor #E9ECEF
+skinparam partitionBorderColor #ADB5BD
+skinparam swimlaneBackgroundColor #F8F9FA
+skinparam swimlaneBorderColor #6C757D
+
+|#E3F2FD|Pegawai|
+start
+:Mulai Transaksi;
+:Scan Produk;
+:Input Jumlah;
+:Konfirmasi Pembayaran;
+:Cetak Struk;
+stop
+
+|#F3E5F5|Sistem POS|
+:Validasi Produk & Stok;
+:Hitung Total;
+:Proses Transaksi;
+
+|#FFECB3|Database|
+:Simpan Transaksi;
+:Update Stok;
+
+note right of Pegawai
+  **Alur Utama:**
+  1. Scan produk
+  2. Konfirmasi pembayaran
+  3. Cetak struk
+end note
+
+@enduml

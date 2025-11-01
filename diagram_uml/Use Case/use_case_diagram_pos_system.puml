@@ -1,0 +1,91 @@
+@startuml use_case_diagram_pos_system
+!theme plain
+title Use Case Diagram - Sistem POS UMKM
+
+' Actors (Stickman representation sesuai standar UML)
+left to right direction
+
+:Direktur: as Direktur
+:Manajer: as Manajer
+:Pegawai: as Pegawai
+
+' System Boundary
+rectangle "Sistem POS UMKM" {
+    ' Authentication
+    usecase "Login" as UC_Login
+    usecase "Validasi Akses\nMulti Role" as UC_ValidasiAkses
+
+    ' Direktur Use Cases
+    usecase "Laporan Terintegrasi" as UC_LaporanTerintegrasi
+    usecase "Ekspor Data" as UC_ExportData
+    usecase "Kelola Cabang" as UC_KelolaCabang
+    usecase "Kelola Pengguna" as UC_KelolaUser
+
+    ' Manajer Use Cases
+    usecase "Dashboard Cabang" as UC_DashboardCabang
+    usecase "Proses Return" as UC_ProsesReturn
+    usecase "Kelola Pegawai" as UC_KelolaPegawai
+    usecase "Kelola Kategori" as UC_KelolaKategori
+    usecase "Kelola Produk" as UC_KelolaProduk
+
+    ' Pegawai Use Cases
+    usecase "Cetak Struk" as UC_CetakStruk
+    usecase "Generate PDF Faktur" as UC_GeneratePDF
+    usecase "Cari dan Filter Data" as UC_CariFilter
+    usecase "Proses Transaksi" as UC_ProsesTransaksi
+    usecase "Update Stok Otomatis" as UC_UpdateStok
+}
+
+' Actor Associations berdasarkan XML diagram
+' Direktur connections
+Direktur --- UC_Login
+Direktur --- UC_KelolaCabang
+Direktur --- UC_KelolaUser
+Direktur --- UC_LaporanTerintegrasi
+Direktur --- UC_ExportData
+
+' Manajer connections
+Manajer --- UC_Login
+Manajer --- UC_LaporanTerintegrasi
+Manajer --- UC_KelolaProduk
+Manajer --- UC_KelolaKategori
+Manajer --- UC_KelolaPegawai
+Manajer --- UC_ProsesReturn
+Manajer --- UC_DashboardCabang
+
+' Pegawai connections
+Pegawai --- UC_Login
+Pegawai --- UC_ProsesTransaksi
+Pegawai --- UC_CetakStruk
+Pegawai --- UC_CariFilter
+
+' Include Relationships
+UC_Login ..> UC_ValidasiAkses : <<include>>
+UC_ProsesTransaksi ..> UC_UpdateStok : <<include>>
+
+' Extend Relationships
+UC_CetakStruk ..> UC_GeneratePDF : <<extend>>
+
+' Layout positioning untuk diagram yang rapi
+UC_Login -[hidden]- UC_ValidasiAkses
+UC_DashboardCabang -[hidden]- UC_ProsesReturn
+UC_KelolaPegawai -[hidden]- UC_KelolaKategori
+UC_KelolaKategori -[hidden]- UC_KelolaProduk
+
+' Styling untuk visual yang konsisten
+skinparam actor {
+    BackgroundColor #e1f5fe
+    BorderColor #01579b
+}
+
+skinparam usecase {
+    BackgroundColor #f3e5f5
+    BorderColor #4a148c
+}
+
+skinparam rectangle {
+    BackgroundColor #e8f5e8
+    BorderColor #2e7d32
+}
+
+@enduml

@@ -1,0 +1,54 @@
+Untuk testing Class Diagram yang telah diperbaiki, Anda dapat:
+
+1. **PlantUML Online Editor:**
+   - Buka: http://www.plantuml.com/plantuml/uml/
+   - Copy-paste isi file: diagram_uml/class_diagram_pos_system.puml
+   - Klik "Submit" untuk melihat hasil render
+
+2. **PlantUML Web Server:**
+   - Buka: https://plantuml-editor.kkeisuke.com/
+   - Paste kode PlantUML
+   - Real-time preview
+
+3. **VS Code Extension:**
+   - Install "PlantUML" extension
+   - Buka file .puml
+   - Tekan Alt+D untuk preview
+
+4. **Draw.io Integration:**
+   - Buka draw.io
+   - File → Import → Pilih "PlantUML"
+   - Paste kode untuk konversi
+
+## Perbaikan Layout yang Telah Dilakukan:
+
+✅ **Struktur Hierarkis 4 Level:**
+   - Level 1: Core System (User, Branch)
+   - Level 2: Product Management (Category, Product)  
+   - Level 3: Sales Transactions (Transaction, TransactionItem)
+   - Level 4: Return Management (ReturnTransaction, ReturnItem)
+
+✅ **Visual Improvements:**
+   - Color coding untuk setiap package
+   - Consistent spacing dan alignment
+   - Professional styling dengan DPI 300
+   - Optimal font sizes dan borders
+
+✅ **Layout Optimization:**
+   - Top-to-bottom flow yang logis
+   - Horizontal positioning dalam packages
+   - Minimal crossing relationships
+   - Clean orthogonal lines
+
+✅ **Enhanced Documentation:**
+   - Descriptive notes untuk setiap entitas utama
+   - Clear relationship labeling
+   - Indonesian language untuk consistency
+
+✅ **UML Best Practices:**
+   - Standard notation compliance
+   - Proper package organization
+   - Logical entity grouping
+   - Professional appearance
+
+Diagram sekarang memiliki tampilan yang jauh lebih bersih, profesional, dan mudah dibaca dibandingkan versi sebelumnya.

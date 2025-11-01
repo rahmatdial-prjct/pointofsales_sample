@@ -1,0 +1,44 @@
+@startuml activity_diagram_kelola_produk_business
+!theme plain
+title Activity Diagram - Kelola Produk Baju Muslim (Business Layer)
+
+|#FFECB3|👤 Manajer|
+start
+:Terima produk baru\ndari supplier;
+:Periksa kualitas produk\n(hijab/gamis/mukena);
+:Tentukan kategori produk;
+
+if (Produk sesuai standar?) then (ya)
+    :Input data produk\nke sistem;
+    :Upload foto produk;
+    :Tentukan harga jual;
+    
+    |#F3E5F5|💻 Sistem POS|
+    :Validasi data produk;
+    :Generate kode SKU;
+    :Simpan data produk;
+    
+    |#FFECB3|👤 Manajer|
+    :Cetak label harga;
+    :Atur display produk\ndi toko;
+    
+    |#E8F5E8|🗄️ Database|
+    :Tambah stok produk;
+    :Update katalog produk;
+    
+else (tidak)
+    :Kembalikan produk\nke supplier;
+    :Buat laporan\nketidaksesuaian;
+endif
+
+stop
+
+note right of Manajer
+  **Kategori Produk:**
+  1. Hijab (berbagai model)
+  2. Gamis (casual/formal)
+  3. Mukena (dewasa/anak)
+  4. Aksesoris muslim
+end note
+
+@enduml

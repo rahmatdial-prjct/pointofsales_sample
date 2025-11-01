@@ -1,0 +1,16 @@
+Req ID;Fitur Fungsional;Deskripsi;Priority (1-5)
+Req 001;Multi-Role Authentication;Sistem login dengan 3 tingkat akses: Direktur dapat akses semua Manajer hanya cabangnya Pegawai hanya transaksi;5
+Req 002;POS Transaction Processing;Sistem kasir yang dapat mencatat penjualan dengan banyak item dan menghitung total otomatis;5
+Req 003;Multi-Branch Operations;Sistem dapat mengelola banyak cabang toko dengan data terpisah namun terpusat;5
+Req 004;Product Catalog Management;Fitur kelola produk lengkap: tambah edit hapus dengan foto dan stok otomatis;4
+Req 005;Financial Calculation;Sistem menghitung keuntungan bersih secara otomatis (penjualan dikurangi barang return);4
+Req 006;Return Request Workflow;Fitur return barang dengan persetujuan manajer dan pencatatan barang rusak;4
+Req 007;Role-Based Dashboard;Halaman utama yang berbeda untuk setiap pengguna sesuai dengan hak aksesnya;4
+Req 008;Inventory Auto-Update;Stok barang otomatis berkurang saat ada transaksi penjualan;3
+Req 009;Integrated Reporting;Laporan lengkap dengan filter tanggal dan bisa diekspor ke file;3
+Req 010;User Management;Kelola pengguna dengan pembatasan sesuai cabang masing-masing;3
+Req 011;Category Management;Pengelompokan produk berdasarkan kategori dengan nama yang mudah dicari;3
+Req 012;Invoice Generation;Cetak struk/nota penjualan dalam format PDF yang rapi;2
+Req 013;Damaged Stock Tracking;Pencatatan otomatis barang rusak dari return yang disetujui manajer;2
+Req 014;Data Export Functionality;Ekspor data transaksi dan laporan ke file Excel untuk analisis;2
+Req 015;Search and Filter;Fitur pencarian dan penyaringan data di semua halaman sistem;1

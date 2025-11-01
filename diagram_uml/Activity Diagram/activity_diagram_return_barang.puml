@@ -1,0 +1,52 @@
+@startuml activity_diagram_return_barang
+!theme plain
+title Activity Diagram - Proses Return Barang (Simplified)
+
+' Styling untuk konsistensi dengan diagram lain
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam activityFontColor #212529
+skinparam activityFontSize 12
+skinparam activityFontStyle bold
+skinparam noteBackgroundColor #FFF3E0
+skinparam noteBorderColor #F57C00
+skinparam partitionBackgroundColor #E9ECEF
+skinparam partitionBorderColor #ADB5BD
+skinparam swimlaneBackgroundColor #F8F9FA
+skinparam swimlaneBorderColor #6C757D
+
+|#E3F2FD|Pegawai|
+start
+:Terima Permintaan Return;
+:Validasi Struk & Kondisi Barang;
+:Input Data Return;
+if (Perlu Approval?) then (Ya)
+  :Informasikan Menunggu Approval;
+else (Tidak)
+  :Proses Return Langsung;
+endif
+:Selesaikan Return;
+stop
+
+|#E8F5E8|Manajer|
+:Review & Approve Return;
+
+|#F3E5F5|Sistem POS|
+:Validasi Transaksi Asli;
+:Hitung Nilai Return;
+:Proses Return;
+
+|#FFECB3|Database|
+:Update Data Return;
+:Kembalikan Stok;
+
+note right of Pegawai
+  **Alur Utama:**
+  1. Validasi struk & barang
+  2. Input data return
+  3. Approval (jika perlu)
+  4. Proses pengembalian
+end note
+
+@enduml

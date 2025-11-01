@@ -1,0 +1,47 @@
+@startuml activity_diagram_login_authorization
+!theme plain
+title Activity Diagram - Proses Login & Authorization (Simplified)
+
+' Styling untuk konsistensi dengan diagram lain
+skinparam backgroundColor #FAFAFA
+skinparam activityBackgroundColor #F8F9FA
+skinparam activityBorderColor #6C757D
+skinparam activityFontColor #212529
+skinparam activityFontSize 12
+skinparam activityFontStyle bold
+skinparam noteBackgroundColor #E3F2FD
+skinparam noteBorderColor #1976D2
+skinparam partitionBackgroundColor #E9ECEF
+skinparam partitionBorderColor #ADB5BD
+skinparam swimlaneBackgroundColor #F8F9FA
+skinparam swimlaneBorderColor #6C757D
+
+|#E3F2FD|User|
+start
+:Input Kredensial Login;
+:Akses Dashboard;
+stop
+
+|#F3E5F5|Sistem POS|
+:Validasi User & Password;
+:Tentukan Role & Permission;
+:Load Dashboard Sesuai Role;
+
+|#FFECB3|Database|
+:Verifikasi Kredensial;
+:Simpan Session;
+:Log Aktivitas;
+
+note right of User
+  **Alur Utama:**
+  1. Input username/password
+  2. Sistem validasi & set permission
+  3. Redirect ke dashboard sesuai role
+
+  **Role:**
+  - Direktur: Full access
+  - Manajer: Branch access
+  - Pegawai: Limited access
+end note
+
+@enduml

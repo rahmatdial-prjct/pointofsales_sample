@@ -1,0 +1,282 @@
+Scenario ID;Case ID;Test Scenario;Type;Test Case;Pre Condition;Steps Description;Expected Result;Status
+TS.001;TC.001.001;Pengujian Login Multi-Role;Positif;Login sebagai Direktur dengan kredensial valid;Mengakses halaman login sistem POS;1. Mengakses halaman login;Berhasil login dan diarahkan ke dashboard direktur;Pass
+;;;;;;2. Pilih role "Direktur";;;
+;;;;;;3. Masukkan email dan password valid;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.002;Pengujian Login Multi-Role;Positif;Login sebagai Manajer dengan kredensial valid;Mengakses halaman login sistem POS;1. Mengakses halaman login;Berhasil login dan diarahkan ke dashboard manajer;Pass
+;;;;;;2. Pilih role "Manajer";;;
+;;;;;;3. Masukkan email dan password valid;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.003;Pengujian Login Multi-Role;Positif;Login sebagai Pegawai dengan kredensial valid;Mengakses halaman login sistem POS;1. Mengakses halaman login;Berhasil login dan diarahkan ke dashboard pegawai;Pass
+;;;;;;2. Pilih role "Pegawai";;;
+;;;;;;3. Masukkan email dan password valid;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.004;Pengujian Login Multi-Role;Negatif;Login dengan email tidak valid;Mengakses halaman login sistem POS;1. Mengakses halaman login;Gagal login dengan pesan error "Email tidak valid";Pass
+;;;;;;2. Pilih role apapun;;;
+;;;;;;3. Masukkan email tidak valid;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.005;Pengujian Login Multi-Role;Negatif;Login dengan password salah;Mengakses halaman login sistem POS;1. Mengakses halaman login;Gagal login dengan pesan error "Password salah";Pass
+;;;;;;2. Pilih role apapun;;;
+;;;;;;3. Masukkan email valid dan password salah;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.006;Pengujian Login Multi-Role;Negatif;Login dengan role tidak sesuai;Mengakses halaman login sistem POS;1. Mengakses halaman login;Gagal login dengan pesan error "Role tidak sesuai";Pass
+;;;;;;2. Pilih role "Direktur";;;
+;;;;;;3. Masukkan kredensial user dengan role "Pegawai";;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.001;TC.001.007;Pengujian Login Multi-Role;Negatif;Login dengan akun tidak aktif;Mengakses halaman login sistem POS;1. Mengakses halaman login;Gagal login dengan pesan error "Akun tidak aktif";Pass
+;;;;;;2. Pilih role sesuai;;;
+;;;;;;3. Masukkan kredensial user dengan is_active = false;;;
+;;;;;;4. Klik tombol "Masuk";;;
+TS.002;TC.002.001;Pengujian Manajemen Produk;Positif;Tambah produk dengan data valid;Login sebagai Manajer;1. Akses menu "Kelola Produk";Produk berhasil ditambahkan ke sistem;Pass
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi semua field dengan data valid;;;
+;;;;;;4. Upload gambar produk (JPEG/PNG);;;
+;;;;;;5. Klik "Simpan";;;
+TS.002;TC.002.002;Pengujian Manajemen Produk;Negatif;Tambah produk dengan SKU duplikat;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal menambah produk dengan pesan error "SKU sudah ada";Pass
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi SKU yang sudah ada di database;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.002;TC.002.003;Pengujian Manajemen Produk;Negatif;Tambah produk dengan harga negatif;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal menambah produk dengan pesan error "Harga harus positif";Pass
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi harga dengan nilai negatif;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.002;TC.002.004;Pengujian Manajemen Produk;Negatif;Tambah produk dengan stok negatif;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal menambah produk dengan pesan error "Stok harus positif";Pass
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi stok dengan nilai negatif;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.002;TC.002.005;Pengujian Manajemen Produk;Negatif;Tambah produk dengan file gambar tidak valid;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal menambah produk dengan pesan error "Format gambar tidak valid";Fail
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi semua field dengan data valid;;;
+;;;;;;4. Upload file selain JPEG/PNG/JPG/GIF;;;
+;;;;;;5. Klik "Simpan";;;
+TS.002;TC.002.006;Pengujian Manajemen Produk;Negatif;Tambah produk dengan gambar terlalu besar;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal menambah produk dengan pesan error "Ukuran gambar terlalu besar";Fail
+;;;;;;2. Klik "Tambah Produk";;;
+;;;;;;3. Isi semua field dengan data valid;;;
+;;;;;;4. Upload gambar > 2MB;;;
+;;;;;;5. Klik "Simpan";;;
+TS.003;TC.003.001;Pengujian Transaksi Penjualan;Positif;Proses transaksi dengan pembayaran tunai;Login sebagai Pegawai;1. Akses menu "Transaksi";Transaksi berhasil diproses dan struk dicetak;Pass
+;;;;;;2. Pilih produk yang tersedia;;;
+;;;;;;3. Masukkan quantity valid;;;
+;;;;;;4. Isi nama pelanggan;;;
+;;;;;;5. Pilih metode pembayaran "Tunai";;;
+;;;;;;6. Klik "Proses Transaksi";;;
+TS.003;TC.003.002;Pengujian Transaksi Penjualan;Positif;Proses transaksi dengan diskon;Login sebagai Pegawai;1. Akses menu "Transaksi";Transaksi berhasil diproses dengan diskon teraplikasi;Pass
+;;;;;;2. Pilih produk yang tersedia;;;
+;;;;;;3. Masukkan quantity valid;;;
+;;;;;;4. Berikan diskon 10%;;;
+;;;;;;5. Isi nama pelanggan;;;
+;;;;;;6. Pilih metode pembayaran;;;
+;;;;;;7. Klik "Proses Transaksi";;;
+TS.003;TC.003.003;Pengujian Transaksi Penjualan;Negatif;Proses transaksi dengan quantity melebihi stok;Login sebagai Pegawai;1. Akses menu "Transaksi";Gagal proses transaksi dengan pesan error "Stok tidak mencukupi";Pass
+;;;;;;2. Pilih produk yang tersedia;;;
+;;;;;;3. Masukkan quantity > stok tersedia;;;
+;;;;;;4. Isi nama pelanggan;;;
+;;;;;;5. Klik "Proses Transaksi";;;
+TS.003;TC.003.004;Pengujian Transaksi Penjualan;Negatif;Proses transaksi dengan diskon > 80%;Login sebagai Pegawai;1. Akses menu "Transaksi";Gagal proses transaksi dengan pesan error "Diskon maksimal 80%";Pass
+;;;;;;2. Pilih produk yang tersedia;;;
+;;;;;;3. Masukkan quantity valid;;;
+;;;;;;4. Berikan diskon > 80%;;;
+;;;;;;5. Isi nama pelanggan;;;
+;;;;;;6. Klik "Proses Transaksi";;;
+TS.003;TC.003.005;Pengujian Transaksi Penjualan;Negatif;Proses transaksi tanpa nama pelanggan;Login sebagai Pegawai;1. Akses menu "Transaksi";Gagal proses transaksi dengan pesan error "Nama pelanggan wajib diisi";Pass
+;;;;;;2. Pilih produk yang tersedia;;;
+;;;;;;3. Masukkan quantity valid;;;
+;;;;;;4. Kosongkan nama pelanggan;;;
+;;;;;;5. Klik "Proses Transaksi";;;
+TS.004;TC.004.001;Pengujian Manajemen Retur;Positif;Proses retur dengan kondisi barang baik;Login sebagai Manajer;1. Akses menu "Retur";Retur berhasil diproses dan stok bertambah;Pass
+;;;;;;2. Pilih transaksi yang akan diretur;;;
+;;;;;;3. Pilih produk yang diretur;;;
+;;;;;;4. Masukkan alasan retur;;;
+;;;;;;5. Pilih kondisi "Baik";;;
+;;;;;;6. Klik "Approve Retur";;;
+TS.004;TC.004.002;Pengujian Manajemen Retur;Positif;Proses retur dengan kondisi barang rusak;Login sebagai Manajer;1. Akses menu "Retur";Retur berhasil diproses dan masuk ke damaged stock;Pass
+;;;;;;2. Pilih transaksi yang akan diretur;;;
+;;;;;;3. Pilih produk yang diretur;;;
+;;;;;;4. Masukkan alasan retur;;;
+;;;;;;5. Pilih kondisi "Rusak";;;
+;;;;;;6. Klik "Approve Retur";;;
+TS.004;TC.004.003;Pengujian Manajemen Retur;Negatif;Tolak retur dengan alasan tidak valid;Login sebagai Manajer;1. Akses menu "Retur";Retur berhasil ditolak dengan alasan tercatat;Pass
+;;;;;;2. Pilih transaksi yang akan diretur;;;
+;;;;;;3. Review detail retur;;;
+;;;;;;4. Masukkan alasan penolakan;;;
+;;;;;;5. Klik "Tolak Retur";;;
+TS.005;TC.005.001;Pengujian Manajemen Cabang;Positif;Tambah cabang baru dengan data valid;Login sebagai Direktur;1. Akses menu "Kelola Cabang";Cabang berhasil ditambahkan ke sistem;Pass
+;;;;;;2. Klik "Tambah Cabang";;;
+;;;;;;3. Isi nama cabang;;;
+;;;;;;4. Isi alamat lengkap;;;
+;;;;;;5. Isi area operasional;;;
+;;;;;;6. Isi nomor telepon (max 12 digit);;;
+;;;;;;7. Isi email cabang;;;
+;;;;;;8. Klik "Simpan";;;
+TS.005;TC.005.002;Pengujian Manajemen Cabang;Negatif;Tambah cabang dengan nama terlalu panjang;Login sebagai Direktur;1. Akses menu "Kelola Cabang";Gagal menambah cabang dengan pesan error "Nama terlalu panjang";Pass
+;;;;;;2. Klik "Tambah Cabang";;;
+;;;;;;3. Isi nama cabang > 255 karakter;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.005;TC.005.003;Pengujian Manajemen Cabang;Negatif;Tambah cabang dengan nomor telepon tidak valid;Login sebagai Direktur;1. Akses menu "Kelola Cabang";Gagal menambah cabang dengan pesan error "Format telepon tidak valid";Fail
+;;;;;;2. Klik "Tambah Cabang";;;
+;;;;;;3. Isi nomor telepon dengan huruf;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.005;TC.005.004;Pengujian Manajemen Cabang;Negatif;Tambah cabang dengan email tidak valid;Login sebagai Direktur;1. Akses menu "Kelola Cabang";Gagal menambah cabang dengan pesan error "Format email tidak valid";Pass
+;;;;;;2. Klik "Tambah Cabang";;;
+;;;;;;3. Isi email tanpa format yang benar;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.006;TC.006.001;Pengujian Manajemen Pengguna;Positif;Tambah pengguna baru dengan role Pegawai;Login sebagai Direktur;1. Akses menu "Kelola Pengguna";Pengguna berhasil ditambahkan dengan role Pegawai;Pass
+;;;;;;2. Klik "Tambah Pengguna";;;
+;;;;;;3. Isi nama lengkap;;;
+;;;;;;4. Isi email unik;;;
+;;;;;;5. Isi password (min 8 karakter);;;
+;;;;;;6. Konfirmasi password;;;
+;;;;;;7. Pilih role "Pegawai";;;
+;;;;;;8. Pilih cabang;;;
+;;;;;;9. Klik "Simpan";;;
+TS.006;TC.006.002;Pengujian Manajemen Pengguna;Negatif;Tambah pengguna dengan email duplikat;Login sebagai Direktur;1. Akses menu "Kelola Pengguna";Gagal menambah pengguna dengan pesan error "Email sudah terdaftar";Pass
+;;;;;;2. Klik "Tambah Pengguna";;;
+;;;;;;3. Isi email yang sudah ada di database;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.006;TC.006.003;Pengujian Manajemen Pengguna;Negatif;Tambah pengguna dengan password terlalu pendek;Login sebagai Direktur;1. Akses menu "Kelola Pengguna";Gagal menambah pengguna dengan pesan error "Password minimal 8 karakter";Pass
+;;;;;;2. Klik "Tambah Pengguna";;;
+;;;;;;3. Isi password < 8 karakter;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.006;TC.006.004;Pengujian Manajemen Pengguna;Negatif;Tambah pengguna dengan konfirmasi password tidak cocok;Login sebagai Direktur;1. Akses menu "Kelola Pengguna";Gagal menambah pengguna dengan pesan error "Konfirmasi password tidak cocok";Pass
+;;;;;;2. Klik "Tambah Pengguna";;;
+;;;;;;3. Isi password dan konfirmasi berbeda;;;
+;;;;;;4. Isi field lain dengan data valid;;;
+;;;;;;5. Klik "Simpan";;;
+TS.007;TC.007.001;Pengujian Laporan Terintegrasi;Positif;Generate laporan penjualan harian;Login sebagai Direktur;1. Akses menu "Laporan";Laporan berhasil di-generate dan dapat diunduh;Pass
+;;;;;;2. Pilih "Laporan Penjualan";;;
+;;;;;;3. Pilih periode "Harian";;;
+;;;;;;4. Pilih tanggal hari ini;;;
+;;;;;;5. Klik "Generate Laporan";;;
+TS.007;TC.007.002;Pengujian Laporan Terintegrasi;Positif;Export laporan ke Excel;Login sebagai Direktur;1. Akses menu "Laporan";File Excel berhasil diunduh;Fail
+;;;;;;2. Generate laporan apapun;;;
+;;;;;;3. Klik "Export ke Excel";;;
+TS.007;TC.007.003;Pengujian Laporan Terintegrasi;Positif;Export laporan ke PDF;Login sebagai Direktur;1. Akses menu "Laporan";File PDF berhasil diunduh;Fail
+;;;;;;2. Generate laporan apapun;;;
+;;;;;;3. Klik "Export ke PDF";;;
+TS.008;TC.008.001;Pengujian Akses Role-Based;Negatif;Pegawai akses menu Direktur;Login sebagai Pegawai;1. Coba akses URL dashboard direktur;Error 403 Forbidden atau redirect ke dashboard pegawai;Pass
+TS.008;TC.008.002;Pengujian Akses Role-Based;Negatif;Manajer akses menu Direktur;Login sebagai Manajer;1. Coba akses URL kelola cabang;Error 403 Forbidden atau redirect ke dashboard manajer;Pass
+TS.008;TC.008.003;Pengujian Akses Role-Based;Negatif;Pegawai akses menu Manajer;Login sebagai Pegawai;1. Coba akses URL kelola produk;Error 403 Forbidden atau redirect ke dashboard pegawai;Pass
+TS.009;TC.009.001;Pengujian Responsivitas Mobile;Positif;Akses sistem via tablet;Menggunakan tablet/smartphone;1. Buka browser di tablet;Interface responsive dan dapat digunakan;Pass
+;;;;;;2. Akses URL sistem POS;;;
+;;;;;;3. Login dengan kredensial valid;;;
+;;;;;;4. Navigasi menu utama;;;
+TS.009;TC.009.002;Pengujian Responsivitas Mobile;Positif;Proses transaksi via mobile;Login via smartphone sebagai Pegawai;1. Akses menu transaksi;Transaksi dapat diproses dengan lancar di mobile;Pass
+;;;;;;2. Pilih produk;;;
+;;;;;;3. Isi quantity dan data pelanggan;;;
+;;;;;;4. Proses transaksi;;;
+TS.010;TC.010.001;Pengujian Kategori Produk;Positif;Tambah kategori baru;Login sebagai Manajer;1. Akses menu "Kelola Kategori";Kategori berhasil ditambahkan dengan slug auto-generate;Pass
+;;;;;;2. Klik "Tambah Kategori";;;
+;;;;;;3. Isi nama kategori;;;
+;;;;;;4. Isi deskripsi;;;
+;;;;;;5. Klik "Simpan";;;
+TS.010;TC.010.002;Pengujian Kategori Produk;Negatif;Tambah kategori dengan nama duplikat;Login sebagai Manajer;1. Akses menu "Kelola Kategori";Gagal menambah kategori dengan pesan error "Nama kategori sudah ada";Pass
+;;;;;;2. Klik "Tambah Kategori";;;
+;;;;;;3. Isi nama kategori yang sudah ada;;;
+;;;;;;4. Isi deskripsi;;;
+;;;;;;5. Klik "Simpan";;;
+TS.011;TC.011.001;Pengujian Dashboard Multi-Role;Positif;Akses dashboard Direktur;Login sebagai Direktur;1. Login berhasil;Dashboard direktur menampilkan data multi-cabang;Pass
+;;;;;;2. Otomatis redirect ke dashboard;;;
+;;;;;;3. Verifikasi konten dashboard;;;
+TS.011;TC.011.002;Pengujian Dashboard Multi-Role;Positif;Akses dashboard Manajer;Login sebagai Manajer;1. Login berhasil;Dashboard manajer menampilkan data cabang spesifik;Pass
+;;;;;;2. Otomatis redirect ke dashboard;;;
+;;;;;;3. Verifikasi konten dashboard;;;
+TS.011;TC.011.003;Pengujian Dashboard Multi-Role;Positif;Akses dashboard Pegawai;Login sebagai Pegawai;1. Login berhasil;Dashboard pegawai menampilkan data personal;Pass
+;;;;;;2. Otomatis redirect ke dashboard;;;
+;;;;;;3. Verifikasi konten dashboard;;;
+TS.012;TC.012.001;Pengujian Stok Management;Positif;Update stok produk;Login sebagai Manajer;1. Akses menu "Kelola Produk";Stok berhasil diupdate dan tercatat dalam history;Pass
+;;;;;;2. Pilih produk yang akan diupdate;;;
+;;;;;;3. Klik "Edit Stok";;;
+;;;;;;4. Masukkan jumlah stok baru;;;
+;;;;;;5. Klik "Update Stok";;;
+TS.012;TC.012.002;Pengujian Stok Management;Negatif;Update stok dengan nilai negatif;Login sebagai Manajer;1. Akses menu "Kelola Produk";Gagal update stok dengan pesan error "Stok tidak boleh negatif";Pass
+;;;;;;2. Pilih produk yang akan diupdate;;;
+;;;;;;3. Klik "Edit Stok";;;
+;;;;;;4. Masukkan nilai stok negatif;;;
+;;;;;;5. Klik "Update Stok";;;
+TS.012;TC.012.003;Pengujian Stok Management;Positif;Alert stok rendah;Login sebagai Manajer;1. Akses dashboard manajer;Sistem menampilkan alert untuk produk dengan stok ≤ 10;Pass
+;;;;;;2. Verifikasi produk dengan stok rendah;;;
+;;;;;;3. Cek notifikasi alert;;;
+TS.013;TC.013.001;Pengujian Payment Methods;Positif;Transaksi dengan pembayaran Transfer;Login sebagai Pegawai;1. Proses transaksi normal;Transaksi berhasil dengan metode Transfer Bank;Pass
+;;;;;;2. Pilih metode "Transfer Bank";;;
+;;;;;;3. Lengkapi data transaksi;;;
+;;;;;;4. Klik "Proses Transaksi";;;
+TS.013;TC.013.002;Pengujian Payment Methods;Positif;Transaksi dengan pembayaran QRIS;Login sebagai Pegawai;1. Proses transaksi normal;Transaksi berhasil dengan metode QRIS;Pass
+;;;;;;2. Pilih metode "QRIS";;;
+;;;;;;3. Lengkapi data transaksi;;;
+;;;;;;4. Klik "Proses Transaksi";;;
+TS.013;TC.013.003;Pengujian Payment Methods;Positif;Transaksi dengan pembayaran Dana;Login sebagai Pegawai;1. Proses transaksi normal;Transaksi berhasil dengan metode Dana;Pass
+;;;;;;2. Pilih metode "Dana";;;
+;;;;;;3. Lengkapi data transaksi;;;
+;;;;;;4. Klik "Proses Transaksi";;;
+TS.014;TC.014.001;Pengujian Validasi Form;Negatif;Submit form kosong - Tambah Produk;Login sebagai Manajer;1. Akses form tambah produk;Form tidak tersubmit dengan pesan error validasi;Pass
+;;;;;;2. Kosongkan semua field wajib;;;
+;;;;;;3. Klik "Simpan";;;
+TS.014;TC.014.002;Pengujian Validasi Form;Negatif;Submit form kosong - Tambah Cabang;Login sebagai Direktur;1. Akses form tambah cabang;Form tidak tersubmit dengan pesan error validasi;Pass
+;;;;;;2. Kosongkan semua field wajib;;;
+;;;;;;3. Klik "Simpan";;;
+TS.014;TC.014.003;Pengujian Validasi Form;Negatif;Submit form kosong - Tambah Pengguna;Login sebagai Direktur;1. Akses form tambah pengguna;Form tidak tersubmit dengan pesan error validasi;Pass
+;;;;;;2. Kosongkan semua field wajib;;;
+;;;;;;3. Klik "Simpan";;;
+TS.015;TC.015.001;Pengujian Search & Filter;Positif;Pencarian produk berdasarkan nama;Login sebagai Pegawai;1. Akses halaman produk;Produk yang sesuai ditampilkan dalam hasil pencarian;Pass
+;;;;;;2. Masukkan nama produk di search box;;;
+;;;;;;3. Klik "Cari" atau tekan Enter;;;
+TS.015;TC.015.002;Pengujian Search & Filter;Positif;Filter produk berdasarkan kategori;Login sebagai Manajer;1. Akses halaman kelola produk;Produk terfilter sesuai kategori yang dipilih;Pass
+;;;;;;2. Pilih kategori dari dropdown filter;;;
+;;;;;;3. Klik "Filter";;;
+TS.015;TC.015.003;Pengujian Search & Filter;Positif;Filter transaksi berdasarkan tanggal;Login sebagai Manajer;1. Akses halaman laporan transaksi;Transaksi terfilter sesuai rentang tanggal;Pass
+;;;;;;2. Pilih tanggal mulai dan akhir;;;
+;;;;;;3. Klik "Filter";;;
+TS.016;TC.016.001;Pengujian Logout;Positif;Logout dari sistem;Login dengan role apapun;1. Klik menu "Logout";Berhasil logout dan redirect ke halaman login;Pass
+;;;;;;2. Konfirmasi logout;;;
+TS.016;TC.016.002;Pengujian Session Management;Negatif;Akses halaman setelah logout;Setelah logout berhasil;1. Coba akses URL dashboard;Redirect ke halaman login dengan pesan "Silakan login";Pass
+TS.017;TC.017.001;Pengujian Damaged Stock;Positif;Tambah barang rusak dari retur;Login sebagai Manajer;1. Proses retur dengan kondisi "Rusak";Barang masuk ke damaged stock dengan status pending;Pass
+;;;;;;2. Approve retur;;;
+;;;;;;3. Verifikasi di menu damaged stock;;;
+TS.017;TC.017.002;Pengujian Damaged Stock;Positif;Dispose barang rusak;Login sebagai Manajer;1. Akses menu "Damaged Stock";Barang berhasil di-dispose dengan timestamp;Pass
+;;;;;;2. Pilih barang rusak;;;
+;;;;;;3. Klik "Dispose";;;
+;;;;;;4. Konfirmasi disposal;;;
+TS.018;TC.018.001;Pengujian Invoice Generation;Positif;Generate nomor invoice unik;Login sebagai Pegawai;1. Proses transaksi normal;Invoice dengan nomor unik per cabang berhasil di-generate;Pass
+;;;;;;2. Selesaikan transaksi;;;
+;;;;;;3. Verifikasi nomor invoice;;;
+TS.018;TC.018.002;Pengujian Invoice Generation;Positif;Cetak ulang struk transaksi;Login sebagai Pegawai;1. Akses riwayat transaksi;Struk berhasil dicetak ulang dengan format yang sama;Pass
+;;;;;;2. Pilih transaksi yang sudah selesai;;;
+;;;;;;3. Klik "Cetak Ulang Struk";;;
+TS.019;TC.019.001;Pengujian Branch Isolation;Negatif;Akses data cabang lain;Login sebagai Manajer Cabang A;1. Coba akses data produk Cabang B;Tidak dapat mengakses data cabang lain;Pass
+;;;;;;2. Manipulasi URL untuk cabang lain;;;
+TS.019;TC.019.002;Pengujian Branch Isolation;Negatif;Edit produk cabang lain;Login sebagai Manajer Cabang A;1. Coba edit produk dari Cabang B;Error 403 atau redirect dengan pesan tidak authorized;Pass
+;;;;;;2. Akses URL edit produk cabang lain;;;
+TS.020;TC.020.001;Pengujian Performance;Positif;Load halaman dengan data banyak;Login dengan role apapun;1. Akses halaman dengan 1000+ records;Halaman berhasil dimuat dalam waktu wajar (<5 detik);Fail
+;;;;;;2. Verifikasi loading time;;;
+TS.020;TC.020.002;Pengujian Performance;Positif;Concurrent user access;Multiple users login bersamaan;1. 10 user login bersamaan;Sistem dapat menangani multiple concurrent users;Pass
+;;;;;;2. Lakukan aktivitas normal;;;
+;;;;;;3. Verifikasi tidak ada conflict;;;
+TS.021;TC.021.001;Pengujian Data Integrity;Positif;Konsistensi stok setelah transaksi;Login sebagai Pegawai;1. Catat stok awal produk;Stok berkurang sesuai quantity yang dijual;Pass
+;;;;;;2. Proses transaksi dengan quantity tertentu;;;
+;;;;;;3. Verifikasi stok setelah transaksi;;;
+TS.021;TC.021.002;Pengujian Data Integrity;Positif;Konsistensi stok setelah retur approved;Login sebagai Manajer;1. Catat stok sebelum retur;Stok bertambah sesuai quantity retur (kondisi baik);Pass
+;;;;;;2. Approve retur dengan kondisi "Baik";;;
+;;;;;;3. Verifikasi stok setelah retur;;;
+TS.022;TC.022.001;Pengujian Error Handling;Negatif;Akses dengan koneksi database terputus;Simulasi database error;1. Putuskan koneksi database;Sistem menampilkan error page yang user-friendly;Fail
+;;;;;;2. Coba akses halaman apapun;;;
+TS.022;TC.022.002;Pengujian Error Handling;Negatif;Upload file dengan ekstensi berbahaya;Login sebagai Manajer;1. Coba upload file .exe sebagai gambar produk;Sistem menolak file dengan pesan error keamanan;Pass
+;;;;;;2. Akses form tambah/edit produk;;;
+;;;;;;3. Upload file berbahaya;;;
+TS.023;TC.023.001;Pengujian Backup & Recovery;Positif;Export data sistem;Login sebagai Direktur;1. Akses menu "Export Data";Data berhasil di-export dalam format yang dapat di-restore;Fail
+;;;;;;2. Pilih jenis data yang akan di-export;;;
+;;;;;;3. Klik "Export";;;
+TS.024;TC.024.001;Pengujian Security;Negatif;SQL Injection pada form login;Akses halaman login;1. Masukkan SQL injection di field email;Sistem tidak terpengaruh injection dan menampilkan error;Pass
+;;;;;;2. Masukkan: admin'; DROP TABLE users; --;;;
+;;;;;;3. Coba login;;;
+TS.024;TC.024.002;Pengujian Security;Negatif;XSS pada form input;Login sebagai Manajer;1. Masukkan script XSS di nama produk;Sistem mem-filter script dan tidak mengeksekusi;Pass
+;;;;;;2. Input: <script>alert('XSS')</script>;;;
+;;;;;;3. Simpan produk;;;
+;;;;;;4. Verifikasi output di halaman produk;;;

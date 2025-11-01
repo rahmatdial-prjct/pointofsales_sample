@@ -1,0 +1,116 @@
+@startuml sequence_diagram_login_authorization
+!theme plain
+title Sequence Diagram - Proses Login & Authorization
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam sequenceMessageAlign center
+skinparam sequenceReferenceAlign center
+skinparam sequenceActorBorderColor #6C757D
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceActorFontColor #212529
+skinparam sequenceActorFontSize 12
+skinparam sequenceActorFontStyle bold
+skinparam sequenceParticipantBorderColor #6C757D
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceParticipantFontColor #212529
+skinparam sequenceParticipantFontSize 11
+skinparam sequenceParticipantFontStyle bold
+skinparam sequenceArrowColor #495057
+skinparam sequenceArrowFontColor #212529
+skinparam sequenceArrowFontSize 10
+skinparam sequenceGroupBorderColor #ADB5BD
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 User" as User
+participant "💻 Sistem POS" as System
+participant "🗄️ Database" as DB
+
+' Sequence Flow
+User -> System: 1. Buka Aplikasi POS
+activate System
+System -> User: 2. Tampilkan Halaman Login
+deactivate System
+
+User -> System: 3. Input Kredensial (Email/Password)
+activate System
+System -> System: 4. Validasi Format Input
+
+alt Format Valid
+    System -> DB: 5. Query User Data
+    activate DB
+    
+    alt User Ditemukan & Aktif
+        DB -> System: 6. Return User Data
+        deactivate DB
+        
+        System -> System: 7. Verifikasi Password
+        
+        alt Password Benar
+            System -> DB: 8. Generate & Simpan Session
+            activate DB
+            DB -> System: 9. Session Token
+            deactivate DB
+            
+            System -> System: 10. Identifikasi Role User
+            
+            alt Role = Direktur
+                System -> System: 11. Set Permission Direktur
+                note right: Full access semua cabang
+                System -> User: 12. Redirect Dashboard Direktur
+                
+            else Role = Manajer
+                System -> System: 13. Set Permission Manajer
+                note right: Access cabang sendiri
+                System -> User: 14. Redirect Dashboard Manajer
+                
+            else Role = Pegawai
+                System -> System: 15. Set Permission Pegawai
+                note right: Limited access
+                System -> User: 16. Redirect Dashboard Pegawai
+            end
+            
+            System -> DB: 17. Update Last Login & Log Aktivitas
+            activate DB
+            DB -> System: 18. Confirmation
+            deactivate DB
+            
+        else Password Salah
+            System -> System: 19. Increment Login Attempt
+            
+            alt Attempt > 3
+                System -> DB: 20. Lock Account & Log Security
+                activate DB
+                DB -> System: 21. Confirmation
+                deactivate DB
+                System -> User: 22. Account Locked Message
+                
+            else Attempt <= 3
+                System -> User: 23. Password Salah Message
+            end
+        end
+        
+    else User Tidak Ditemukan/Tidak Aktif
+        DB -> System: 24. User Not Found/Inactive
+        deactivate DB
+        System -> User: 25. Error Message
+    end
+    
+else Format Invalid
+    System -> User: 26. Format Invalid Message
+end
+
+deactivate System
+
+note over User, DB
+    **Login Berhasil:**
+    - Session aktif dengan token
+    - Permission sesuai role
+    - Dashboard loaded
+    - Aktivitas tercatat
+end note
+
+@enduml

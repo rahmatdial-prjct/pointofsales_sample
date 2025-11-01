@@ -1,0 +1,276 @@
+@startuml class_diagram_pos_system
+!theme plain
+title Class Diagram - Sistem POS UMKM
+
+' Optimized layout settings for clean professional appearance
+skinparam backgroundColor #FAFAFA
+skinparam classBackgroundColor #F8F9FA
+skinparam classBorderColor #6C757D
+skinparam classFontColor #212529
+skinparam classFontSize 12
+skinparam classFontStyle bold
+skinparam classAttributeFontSize 10
+skinparam classAttributeIconSize 0
+skinparam minClassWidth 200
+skinparam maxMessageSize 120
+skinparam packageStyle rectangle
+skinparam packageBackgroundColor #E9ECEF
+skinparam packageBorderColor #ADB5BD
+skinparam packageFontSize 14
+skinparam packageFontStyle bold
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 100
+skinparam dpi 300
+
+' Layout direction for optimal flow
+top to bottom direction
+
+' ===== LEVEL 1: CORE SYSTEM ENTITIES =====
+package "Core System" #E3F2FD {
+
+    class User {
+        - id: int
+        - name: String
+        - email: String
+        - password: String
+        - role: String
+        - is_active: boolean
+        - branch_id: int
+        - email_verified_at: DateTime
+        - remember_token: String
+        - created_at: DateTime
+        - updated_at: DateTime
+        --
+        + isDirector(): boolean
+        + isManager(): boolean
+        + isEmployee(): boolean
+        + isActive(): boolean
+        + canManageUsers(): boolean
+        + canManageProducts(): boolean
+        + canManageStock(): boolean
+        + canProcessTransactions(): boolean
+        + canProcessReturns(): boolean
+        + canViewReports(): boolean
+        + scopeActive(query): Query
+        + scopeByRole(query, role): Query
+        + scopeByBranch(query, branchId): Query
+    }
+
+    class Branch {
+        - id: int
+        - name: String
+        - address: String
+        - operational_area: String
+        - phone: String
+        - email: String
+        - is_active: boolean
+        - created_at: DateTime
+        - updated_at: DateTime
+        - deleted_at: DateTime
+        --
+        + users(): HasMany
+        + transactions(): HasMany
+        + returns(): HasMany
+        + products(): HasMany
+    }
+}
+
+' ===== LEVEL 2: PRODUCT MANAGEMENT =====
+package "Product Management" #F3E5F5 {
+
+    class Category {
+        - id: int
+        - name: String
+        - slug: String
+        - description: String
+        - is_active: boolean
+        - created_at: DateTime
+        - updated_at: DateTime
+        - deleted_at: DateTime
+        --
+        + products(): HasMany
+        + boot(): void
+    }
+
+    class Product {
+        - id: int
+        - name: String
+        - sku: String
+        - category_id: int
+        - description: String
+        - image: String
+        - base_price: decimal
+        - stock: int
+        - is_active: boolean
+        - branch_id: int
+        - created_at: DateTime
+        - updated_at: DateTime
+        - deleted_at: DateTime
+        --
+        + category(): BelongsTo
+        + branch(): BelongsTo
+        + transactionItems(): HasMany
+        + returnItems(): HasMany
+        + scopeActive(query): Query
+    }
+}
+
+' ===== LEVEL 3: SALES TRANSACTIONS =====
+package "Sales Transactions" #E8F5E8 {
+
+    class Transaction {
+        - id: int
+        - invoice_number: String
+        - branch_id: int
+        - user_id: int
+        - employee_id: int
+        - customer_name: String
+        - subtotal: decimal
+        - discount_amount: decimal
+        - total_amount: decimal
+        - payment_method: String
+        - status: String
+        - notes: String
+        - created_at: DateTime
+        - updated_at: DateTime
+        - deleted_at: DateTime
+        --
+        + items(): HasMany
+        + branch(): BelongsTo
+        + employee(): BelongsTo
+        + user(): BelongsTo
+    }
+
+    class TransactionItem {
+        - id: int
+        - transaction_id: int
+        - product_id: int
+        - quantity: int
+        - price: decimal
+        - discount_percentage: decimal
+        - discount_amount: decimal
+        - subtotal: decimal
+        - created_at: DateTime
+        - updated_at: DateTime
+        --
+        + transaction(): BelongsTo
+        + product(): BelongsTo
+        + calculateSubtotal(): void
+    }
+}
+
+' ===== LEVEL 4: RETURN MANAGEMENT =====
+package "Return Management" #FFF3E0 {
+
+    class ReturnTransaction {
+        - id: int
+        - return_number: String
+        - branch_id: int
+        - user_id: int
+        - transaction_id: int
+        - reason: String
+        - total: decimal
+        - status: String
+        - approved_by: int
+        - approved_at: DateTime
+        - notes: String
+        - created_at: DateTime
+        - updated_at: DateTime
+        - deleted_at: DateTime
+        --
+        + returnItems(): HasMany
+        + employee(): BelongsTo
+        + user(): BelongsTo
+        + branch(): BelongsTo
+        + originalTransaction(): BelongsTo
+    }
+
+    class ReturnItem {
+        - id: int
+        - return_transaction_id: int
+        - product_id: int
+        - quantity: int
+        - price: decimal
+        - subtotal: decimal
+        - reason: String
+        - condition: String
+        - created_at: DateTime
+        - updated_at: DateTime
+        --
+        + returnTransaction(): BelongsTo
+        + product(): BelongsTo
+        + calculateSubtotal(): void
+    }
+}
+
+' ===== LAYOUT POSITIONING FOR CLEAN HIERARCHY =====
+
+' Horizontal positioning within packages
+User -[hidden]right- Branch
+
+Category -[hidden]right- Product
+
+Transaction -[hidden]right- TransactionItem
+
+ReturnTransaction -[hidden]right- ReturnItem
+
+' Vertical flow between package levels
+"Core System" -[hidden]down- "Product Management"
+"Product Management" -[hidden]down- "Sales Transactions"
+"Sales Transactions" -[hidden]down- "Return Management"
+
+' ===== RELATIONSHIPS - ORGANIZED BY HIERARCHY =====
+
+' LEVEL 1: Core System Relationships
+User }o--|| Branch : "belongs to"
+Branch ||--o{ User : "has many"
+
+' LEVEL 2: Product Management Relationships
+Category ||--o{ Product : "has many"
+Product }o--|| Category : "belongs to"
+Branch ||--o{ Product : "has many"
+Product }o--|| Branch : "belongs to"
+
+' LEVEL 3: Sales Transaction Relationships
+User ||--o{ Transaction : "processes"
+Transaction }o--|| User : "processed by"
+Branch ||--o{ Transaction : "has many"
+Transaction }o--|| Branch : "belongs to"
+
+Transaction ||--o{ TransactionItem : "contains"
+TransactionItem }o--|| Transaction : "belongs to"
+Product ||--o{ TransactionItem : "sold in"
+TransactionItem }o--|| Product : "references"
+
+' LEVEL 4: Return Management Relationships
+User ||--o{ ReturnTransaction : "processes"
+ReturnTransaction }o--|| User : "processed by"
+Branch ||--o{ ReturnTransaction : "has many"
+ReturnTransaction }o--|| Branch : "belongs to"
+Transaction ||--o{ ReturnTransaction : "can be returned"
+ReturnTransaction }o--|| Transaction : "returns from"
+
+ReturnTransaction ||--o{ ReturnItem : "contains"
+ReturnItem }o--|| ReturnTransaction : "belongs to"
+Product ||--o{ ReturnItem : "returned as"
+ReturnItem }o--|| Product : "references"
+
+' Styling untuk visual yang konsisten dengan use case diagram
+skinparam class {
+    BackgroundColor #f3e5f5
+    BorderColor #4a148c
+    ArrowColor #4a148c
+}
+
+skinparam note {
+    BackgroundColor #fff3e0
+    BorderColor #e65100
+}
+
+' Notes untuk penjelasan
+note top of User : "Base class untuk semua role:\nDirektur, Manajer, Pegawai"
+note right of Transaction : "Transaksi penjualan\ndengan multiple items"
+note right of ReturnTransaction : "Transaksi return\ndengan approval workflow"
+
+@enduml

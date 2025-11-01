@@ -1,0 +1,50 @@
+@startuml activity_diagram_jual_produk_business
+!theme plain
+title Activity Diagram - Jual Produk Baju Muslim (Business Layer)
+
+|#E3F2FD|👤 Pegawai|
+start
+:Terima pelanggan;
+:Tanyakan kebutuhan\n(hijab/gamis/mukena);
+:Cari produk di katalog;
+:Tunjukkan produk\nkepada pelanggan;
+
+|#F3E5F5|💻 Sistem POS|
+:Tampilkan daftar produk\nyang tersedia;
+:Cek stok produk;
+
+|#E3F2FD|👤 Pegawai|
+if (Pelanggan setuju?) then (ya)
+    :Input nama pelanggan;
+    :Masukkan jumlah produk;
+    :Pilih metode pembayaran\n(tunai/transfer/QRIS);
+    
+    |#F3E5F5|💻 Sistem POS|
+    :Hitung total harga;
+    :Proses transaksi;
+    
+    |#E3F2FD|👤 Pegawai|
+    :Cetak struk penjualan;
+    :Serahkan produk\ndan struk;
+    
+    |#FFECB3|🗄️ Database|
+    :Simpan data transaksi;
+    :Kurangi stok produk;
+    
+else (tidak)
+    :Tawarkan produk lain;
+    stop
+endif
+
+stop
+
+note right of Pegawai
+  **Proses Bisnis Utama:**
+  1. Layani pelanggan
+  2. Cari produk sesuai kebutuhan
+  3. Proses pembayaran
+  4. Cetak struk
+  5. Serahkan produk
+end note
+
+@enduml

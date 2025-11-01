@@ -1,0 +1,148 @@
+@startuml sequence_diagram_return_barang
+!theme plain
+title Sequence Diagram - Proses Return Barang
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam sequenceMessageAlign center
+skinparam sequenceReferenceAlign center
+skinparam sequenceActorBorderColor #6C757D
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceActorFontColor #212529
+skinparam sequenceActorFontSize 12
+skinparam sequenceActorFontStyle bold
+skinparam sequenceParticipantBorderColor #6C757D
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceParticipantFontColor #212529
+skinparam sequenceParticipantFontSize 11
+skinparam sequenceParticipantFontStyle bold
+skinparam sequenceArrowColor #495057
+skinparam sequenceArrowFontColor #212529
+skinparam sequenceArrowFontSize 10
+skinparam sequenceGroupBorderColor #ADB5BD
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 Pegawai" as Pegawai
+actor "👨‍💼 Manajer" as Manajer
+participant "💻 Sistem POS" as System
+participant "🗄️ Database" as DB
+
+' Sequence Flow
+Pegawai -> System: 1. Terima Permintaan Return dari Pelanggan
+activate System
+System -> Pegawai: 2. Tampilkan Form Return
+deactivate System
+
+Pegawai -> System: 3. Input Nomor Invoice
+activate System
+System -> DB: 4. Query Transaksi Asli
+activate DB
+
+alt Transaksi Ditemukan
+    DB -> System: 5. Return Data Transaksi
+    deactivate DB
+    System -> System: 6. Validasi Periode Return
+    
+    alt Masih dalam Periode
+        System -> Pegawai: 7. Tampilkan Detail Transaksi
+        
+        Pegawai -> System: 8. Pilih Produk & Input Jumlah Return
+        Pegawai -> System: 9. Input Alasan Return
+        System -> System: 10. Validasi Kondisi Return
+        
+        alt Kondisi Valid
+            System -> System: 11. Hitung Nilai Return
+            System -> System: 12. Generate Nomor Return
+            System -> System: 13. Cek Role Pegawai
+            
+            alt Role = Manajer
+                System -> DB: 14. Simpan Return (Status: Approved)
+                activate DB
+                DB -> System: 15. Return ID
+                deactivate DB
+                
+                System -> DB: 16. Update Stok Produk
+                activate DB
+                DB -> System: 17. Konfirmasi Update Stok
+                deactivate DB
+                
+                System -> System: 18. Generate Nota Return
+                System -> Pegawai: 19. Tampilkan Nota Return
+                Pegawai -> System: 20. Cetak Nota Return
+                System -> Pegawai: 21. Return Berhasil Diproses
+                
+            else Role = Pegawai Biasa
+                System -> DB: 22. Simpan Return (Status: Pending)
+                activate DB
+                DB -> System: 23. Return ID
+                deactivate DB
+                
+                System -> Manajer: 24. Kirim Notifikasi Approval
+                System -> Pegawai: 25. Informasikan Menunggu Approval
+                
+                ' Approval Process
+                Manajer -> System: 26. Review Permintaan Return
+                activate System
+                System -> DB: 27. Query Detail Return
+                activate DB
+                DB -> System: 28. Return Data Return
+                deactivate DB
+                System -> Manajer: 29. Tampilkan Detail Return
+                
+                Manajer -> System: 30. Keputusan Approval
+                
+                alt Manajer Approve
+                    System -> DB: 31. Update Status Return (Approved)
+                    activate DB
+                    DB -> System: 32. Konfirmasi Update
+                    deactivate DB
+                    
+                    System -> DB: 33. Update Stok Produk
+                    activate DB
+                    DB -> System: 34. Konfirmasi Update Stok
+                    deactivate DB
+                    
+                    System -> System: 35. Generate Nota Return
+                    System -> Pegawai: 36. Notifikasi Approval
+                    System -> Manajer: 37. Konfirmasi Approval Tersimpan
+                    
+                else Manajer Reject
+                    System -> DB: 38. Update Status Return (Rejected)
+                    activate DB
+                    DB -> System: 39. Konfirmasi Update
+                    deactivate DB
+                    
+                    System -> Pegawai: 40. Notifikasi Penolakan
+                    System -> Manajer: 41. Konfirmasi Penolakan Tersimpan
+                end
+                deactivate System
+            end
+            
+        else Kondisi Tidak Valid
+            System -> Pegawai: 42. Error: Kondisi Return Tidak Memenuhi Syarat
+        end
+        
+    else Periode Habis
+        System -> Pegawai: 43. Error: Periode Return Sudah Habis
+    end
+    
+else Transaksi Tidak Ditemukan
+    DB -> System: 44. Transaksi Not Found
+    deactivate DB
+    System -> Pegawai: 45. Error: Transaksi Tidak Ditemukan
+end
+
+deactivate System
+
+note over Pegawai, DB
+    **Return Berhasil:**
+    - Data return tersimpan dengan status yang tepat
+    - Stok dikembalikan (jika approved)
+    - Nota return untuk pelanggan
+    - Audit trail approval process
+end note
+
+@enduml

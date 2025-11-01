@@ -1,0 +1,117 @@
+@startuml sequence_diagram_transaksi_penjualan
+!theme plain
+title Sequence Diagram - Proses Transaksi Penjualan
+
+' Styling untuk konsistensi
+skinparam backgroundColor #FAFAFA
+skinparam sequenceMessageAlign center
+skinparam sequenceReferenceAlign center
+skinparam sequenceActorBorderColor #6C757D
+skinparam sequenceActorBackgroundColor #E3F2FD
+skinparam sequenceActorFontColor #212529
+skinparam sequenceActorFontSize 12
+skinparam sequenceActorFontStyle bold
+skinparam sequenceParticipantBorderColor #6C757D
+skinparam sequenceParticipantBackgroundColor #F3E5F5
+skinparam sequenceParticipantFontColor #212529
+skinparam sequenceParticipantFontSize 11
+skinparam sequenceParticipantFontStyle bold
+skinparam sequenceArrowColor #495057
+skinparam sequenceArrowFontColor #212529
+skinparam sequenceArrowFontSize 10
+skinparam sequenceGroupBorderColor #ADB5BD
+skinparam sequenceGroupBackgroundColor #F8F9FA
+skinparam sequenceLifeLineBorderColor #6C757D
+skinparam sequenceLifeLineBackgroundColor #FFFFFF
+
+' Actors dan Participants
+actor "👤 Pegawai" as Pegawai
+participant "💻 Sistem POS" as System
+participant "🗄️ Database" as DB
+
+' Sequence Flow
+Pegawai -> System: 1. Mulai Transaksi
+activate System
+System -> System: 2. Inisialisasi Keranjang Kosong
+System -> Pegawai: 3. Tampilkan Interface Transaksi
+deactivate System
+
+loop Untuk Setiap Produk
+    Pegawai -> System: 4. Scan/Input Kode Produk
+    activate System
+    System -> DB: 5. Query Data Produk
+    activate DB
+    
+    alt Produk Ditemukan
+        DB -> System: 6. Return Data Produk
+        deactivate DB
+        System -> DB: 7. Cek Stok Tersedia
+        activate DB
+        
+        alt Stok Mencukupi
+            DB -> System: 8. Konfirmasi Stok Available
+            deactivate DB
+            System -> Pegawai: 9. Tampilkan Info Produk
+            
+            Pegawai -> System: 10. Input Jumlah Beli
+            System -> System: 11. Validasi Jumlah vs Stok
+            
+            alt Jumlah Valid
+                System -> System: 12. Hitung Subtotal
+                System -> System: 13. Tambah ke Keranjang
+                System -> System: 14. Update Total Belanja
+                System -> Pegawai: 15. Update Display Keranjang
+                
+            else Jumlah Melebihi Stok
+                System -> Pegawai: 16. Error: Stok Tidak Cukup
+            end
+            
+        else Stok Habis
+            DB -> System: 17. Stok Tidak Available
+            deactivate DB
+            System -> Pegawai: 18. Error: Stok Habis
+        end
+        
+    else Produk Tidak Ditemukan
+        DB -> System: 19. Produk Not Found
+        deactivate DB
+        System -> Pegawai: 20. Error: Produk Tidak Ditemukan
+    end
+    deactivate System
+end
+
+Pegawai -> System: 21. Konfirmasi Pembayaran
+activate System
+System -> System: 22. Hitung Total Akhir
+System -> Pegawai: 23. Tampilkan Ringkasan Transaksi
+
+Pegawai -> System: 24. Konfirmasi Final
+System -> System: 25. Generate Nomor Invoice
+System -> DB: 26. Simpan Data Transaksi
+activate DB
+DB -> System: 27. Transaction ID
+deactivate DB
+
+System -> DB: 28. Update Stok Produk (Batch)
+activate DB
+DB -> System: 29. Konfirmasi Update Stok
+deactivate DB
+
+System -> System: 30. Generate Struk
+System -> Pegawai: 31. Tampilkan Struk untuk Cetak
+
+Pegawai -> System: 32. Cetak Struk
+System -> Pegawai: 33. Struk Tercetak
+System -> Pegawai: 34. Transaksi Selesai
+
+deactivate System
+
+note over Pegawai, DB
+    **Transaksi Berhasil:**
+    - Invoice tersimpan dengan ID unik
+    - Stok produk terupdate
+    - Struk tercetak untuk pelanggan
+    - Keranjang direset untuk transaksi berikutnya
+end note
+
+@enduml
